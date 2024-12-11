@@ -17,7 +17,7 @@ import com.google.gson.Gson;
 
 
 import DAO.loginDAO;
-import Entity.loginEntity;
+import Entity.usersEntity;
 
 @WebServlet("/loginController")
 public class loginController extends HttpServlet {
@@ -39,7 +39,7 @@ public class loginController extends HttpServlet {
 		response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 		
-        loginEntity account;
+        usersEntity account;
 		try {
 			account = LoginDao.Login(email, password);
 			PrintWriter out = response.getWriter();

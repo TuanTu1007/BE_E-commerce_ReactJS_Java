@@ -1,6 +1,6 @@
 package Entity;
 
-public class loginEntity {
+public class usersEntity {
 	private int user_id;
 	private String username;
 	private String password_hash;
@@ -43,7 +43,7 @@ public class loginEntity {
 	public void setCreated_at(String created_at) {
 		this.created_at = created_at;
 	}
-	public loginEntity(int user_id, String username, String password_hash, String email, String role,
+	public usersEntity(int user_id, String username, String password_hash, String email, String role,
 			String created_at) {
 		super();
 		this.user_id = user_id;
