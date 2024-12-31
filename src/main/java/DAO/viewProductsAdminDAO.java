@@ -1,22 +1,26 @@
 package DAO;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.sql.DataSource;
 
 import Entity.categoriesEntity;
 import Entity.productsEntity;
 import Entity.subcategoriesEntity;
 
-public class viewProductsDAO {
-    private DataSource dataSource;
+public class viewProductsAdminDAO {
+	private DataSource dataSource;
 
-    public viewProductsDAO(DataSource dataSource) {
+    public viewProductsAdminDAO(DataSource dataSource) {
         this.dataSource = dataSource;
     }
     
-    // Phương thức lấy danh sách tất cả sản phẩm
+ // Phương thức lấy danh sách tất cả sản phẩm
     public List<productsEntity> getAllProducts() throws SQLException {
         List<productsEntity> productList = new ArrayList<>();
         String sql = "SELECT p.product_id, p.name, p.image_url, p.description, p.price, p.bestseller, " +
@@ -62,5 +66,15 @@ public class viewProductsDAO {
         }
         return productList;
     }
+    
+    public void deleteProduct(String productId) throws SQLException {
+        String sql = "DELETE FROM Products WHERE product_id = ?";
 
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, productId);
+            stmt.executeUpdate();
+        }
+    }
 }
