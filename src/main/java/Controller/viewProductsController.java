@@ -35,23 +35,33 @@ public class viewProductsController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-
-        try {
+//        response.setContentType("application/json");
+//        response.setCharacterEncoding("UTF-8");
+//
+//        try {
+//            List<productsEntity> productList = productsDAO.getAllProducts();
+//
+//            Gson gson = new Gson();
+//            String json = gson.toJson(productList);
+//
+//            PrintWriter out = response.getWriter();
+//            out.print(json);
+//            out.flush();
+//
+//        } catch (SQLException e) {
+//            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+//            e.printStackTrace();
+//            response.getWriter().write("{\"error\": \"Không thể lấy danh sách sản phẩm\"}");
+//        }
+    	try {
             List<productsEntity> productList = productsDAO.getAllProducts();
-
-            Gson gson = new Gson();
-            String json = gson.toJson(productList);
-
-            PrintWriter out = response.getWriter();
-            out.print(json);
-            out.flush();
-
+            request.setAttribute("productList", productList);
+            request.getRequestDispatcher("/viewProducts.jsp").forward(request, response);
         } catch (SQLException e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             e.printStackTrace();
-            response.getWriter().write("{\"error\": \"Không thể lấy danh sách sản phẩm\"}");
+            request.setAttribute("errorMessage", "Không thể lấy danh sách sản phẩm");
+            request.getRequestDispatcher("/error.jsp").forward(request, response);
         }
     }
 }

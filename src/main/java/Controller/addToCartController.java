@@ -35,8 +35,8 @@ public class addToCartController extends HttpServlet {
         try {
             // Lấy thông tin từ form
             String productId = request.getParameter("id");
-            String sizeName = request.getParameter("sizeName"); // Lấy sizeName từ form (ví dụ: S, M, L)
-            String quantityParam = request.getParameter("orderQuantity");
+            String sizeName = request.getParameter("sizeName"); 
+            String quantityParam = "1";
 
             if (productId == null || sizeName == null || quantityParam == null) {
                 throw new IllegalArgumentException("Missing required parameters.");
@@ -49,7 +49,7 @@ public class addToCartController extends HttpServlet {
             int quantity = Integer.parseInt(quantityParam);
 
             // Lấy userId từ session
-            Integer userId = (Integer) request.getSession().getAttribute("userId");
+            Integer userId = 1;//(Integer) request.getSession().getAttribute("userId");
             if (userId == null) {
                 throw new IllegalArgumentException("User is not logged in.");
             }
