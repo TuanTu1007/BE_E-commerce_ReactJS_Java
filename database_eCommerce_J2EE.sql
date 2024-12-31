@@ -33,8 +33,8 @@ CREATE TABLE Products (
     bestseller BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP NULL,
-    FOREIGN KEY (category_id) REFERENCES Categories(category_id),
-    FOREIGN KEY (subcategory_id) REFERENCES Subcategories(subcategory_id)
+    FOREIGN KEY (category_id) REFERENCES Categories(category_id) ON DELETE CASCADE,
+    FOREIGN KEY (subcategory_id) REFERENCES Subcategories(subcategory_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Sizes (
@@ -46,8 +46,8 @@ CREATE TABLE Product_Sizes (
     product_id VARCHAR(50),
     size_id INT,
     PRIMARY KEY (product_id, size_id),
-    FOREIGN KEY (product_id) REFERENCES Products(product_id),
-    FOREIGN KEY (size_id) REFERENCES Sizes(size_id)
+    FOREIGN KEY (product_id) REFERENCES Products(product_id) ON DELETE CASCADE,
+    FOREIGN KEY (size_id) REFERENCES Sizes(size_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Cart (
@@ -57,9 +57,9 @@ CREATE TABLE Cart (
     quantity INT NOT NULL,
     size_id INT,
     added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id),
-    FOREIGN KEY (product_id) REFERENCES Products(product_id),
-    FOREIGN KEY (size_id) REFERENCES Sizes(size_id)
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES Products(product_id) ON DELETE CASCADE,
+    FOREIGN KEY (size_id) REFERENCES Sizes(size_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Orders (
@@ -68,7 +68,7 @@ CREATE TABLE Orders (
     total_amount DECIMAL(10, 2) NOT NULL,
     order_status ENUM('pending', 'shipped', 'delivered', 'cancelled') DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Order_Details (
@@ -78,9 +78,9 @@ CREATE TABLE Order_Details (
     quantity INT NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
     size_id INT,
-    FOREIGN KEY (order_id) REFERENCES Orders(order_id),
-    FOREIGN KEY (product_id) REFERENCES Products(product_id),
-    FOREIGN KEY (size_id) REFERENCES Sizes(size_id)
+    FOREIGN KEY (order_id) REFERENCES Orders(order_id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES Products(product_id) ON DELETE CASCADE,
+    FOREIGN KEY (size_id) REFERENCES Sizes(size_id) ON DELETE CASCADE
 );
 
 CREATE TABLE payment_details (
@@ -91,7 +91,7 @@ CREATE TABLE payment_details (
   status ENUM('pending', 'completed', 'failed'),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (order_id) REFERENCES Orders(order_id)
+  FOREIGN KEY (order_id) REFERENCES Orders(order_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Reviews (
@@ -101,8 +101,8 @@ CREATE TABLE Reviews (
     rating INT CHECK (rating >= 1 AND rating <= 5),
     comment TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id),
-    FOREIGN KEY (product_id) REFERENCES Products(product_id)
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES Products(product_id) ON DELETE CASCADE
 );
 
 
@@ -130,7 +130,8 @@ INSERT INTO Subcategories (subcategory_name, category_id) VALUES
 ('Winterwear', 1);
 
 INSERT INTO Products (product_id, name, image_url, description, price, category_id, subcategory_id, bestseller) VALUES 
-('aaaaa', 'Women Round Neck Cotton Top', 'p_img1', 'A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.', 100.00, 1, 1, TRUE);
+('aaaac', 'Women Round Neck Cotton Top', 'https://drive.google.com/drive/folders/18pW1wX63XPdJGr12sdmsK7Kk2acIJPwN', 'A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.', 100.00, 1, 1, TRUE),
+('aaaab', 'Women Round Neck Cotton Top', 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fsnapshot.canon-asia.com%2Fvn%2Farticle%2Fviet%2Flandscape-photography-quick-tips-for-stunning-deep-focused-images&psig=AOvVaw2fBtzBu-Qx49qo82duw_l6&ust=1734028978662000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCIDWh7yvoIoDFQAAAAAdAAAAABAE', 'A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.', 100.00, 1, 1, TRUE);
 
 INSERT INTO Sizes (size_name) VALUES 
 ('S'),
@@ -138,6 +139,6 @@ INSERT INTO Sizes (size_name) VALUES
 ('L');
 
 INSERT INTO Product_Sizes (product_id, size_id) VALUES 
-('aaaaa', 1), -- S
-('aaaaa', 2), -- M
-('aaaaa', 3); -- L
+('aaaab', 1), -- S
+('aaaab', 2), -- M
+('aaaab', 3); -- L
