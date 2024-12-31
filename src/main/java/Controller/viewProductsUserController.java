@@ -18,8 +18,8 @@ import com.google.gson.Gson;
 import DAO.viewProductsDAO;
 import Entity.productsEntity;
 
-@WebServlet("/viewProductsController")
-public class viewProductsController extends HttpServlet {
+@WebServlet("/viewProductsUserController")
+public class viewProductsUserController extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private viewProductsDAO productsDAO;
@@ -35,34 +35,25 @@ public class viewProductsController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
-//        response.setContentType("application/json");
-//        response.setCharacterEncoding("UTF-8");
-//
-//        try {
-//            List<productsEntity> productList = productsDAO.getAllProducts();
-//
-//            Gson gson = new Gson();
-//            String json = gson.toJson(productList);
-//
-//            PrintWriter out = response.getWriter();
-//            out.print(json);
-//            out.flush();
-//
-//        } catch (SQLException e) {
-//            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-//            e.printStackTrace();
-//            response.getWriter().write("{\"error\": \"Không thể lấy danh sách sản phẩm\"}");
-//        }
-    	try {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        try {
             List<productsEntity> productList = productsDAO.getAllProducts();
-            request.setAttribute("productList", productList);
-            request.getRequestDispatcher("/viewProducts.jsp").forward(request, response);
+
+            Gson gson = new Gson();
+            String json = gson.toJson(productList);
+
+            PrintWriter out = response.getWriter();
+            out.print(json);
+            out.flush();
+
         } catch (SQLException e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             e.printStackTrace();
-            request.setAttribute("errorMessage", "Không thể lấy danh sách sản phẩm");
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            response.getWriter().write("{\"error\": \"Không thể lấy danh sách sản phẩm\"}");
         }
+    	
     }
 }
 

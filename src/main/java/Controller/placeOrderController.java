@@ -2,7 +2,6 @@ package Controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
+import com.google.gson.Gson;
+
 import DAO.cartDAO;
 import Entity.cartEntity;
 import Entity.orderDetailEntity;
@@ -22,7 +23,7 @@ import DAO.placeOrderDAO;
 
 @WebServlet("/placeOrderController")
 public class placeOrderController extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     @Resource(name = "jdbc/DB_ECOMMERCE_J2EE") 
     private DataSource dataSource;
@@ -39,7 +40,7 @@ public class placeOrderController extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Lấy thông tin từ form checkout
-        int userId = 1;// Integer.parseInt(request.getParameter("userId"));
+        int userId = Integer.parseInt(request.getParameter("userId"));
         String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");
         String email = request.getParameter("email");
@@ -54,7 +55,10 @@ public class placeOrderController extends HttpServlet {
         List<cartEntity> cartItems = CartDao.getCartItemsByUserId(userId);
 
         if (cartItems == null || cartItems.isEmpty()) {
-            response.sendRedirect("cart.jsp");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write("{\"message\":\"Cart is empty\"}");
             return;
         }
 
@@ -82,14 +86,22 @@ public class placeOrderController extends HttpServlet {
             try {
                 // Xóa giỏ hàng sau khi đặt hàng thành công
                 CartDao.clearCart(userId);
-                response.sendRedirect(request.getContextPath() + "/trackOrderController");
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write("{\"message\":\"Order placed successfully\"}");
             } catch (SQLException e) {
                 e.printStackTrace();
-                response.sendRedirect("cart.jsp");
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write("{\"message\":\"Error clearing cart\"}");
             }
         } else {
-            response.sendRedirect("cart.jsp");
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write("{\"message\":\"Error placing order\"}");
         }
     }
-
 }

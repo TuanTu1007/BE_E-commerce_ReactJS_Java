@@ -21,7 +21,7 @@ public class trackOrderDAO {
     public List<orderDetailEntity> getAllOrderDetails() throws SQLException {
         List<orderDetailEntity> orderDetails = new ArrayList<>();
         String sql = """
-                SELECT od.order_detail_id, od.order_id, od.product_id, od.quantity, od.price,
+                SELECT od.order_detail_id, od.order_id, o.user_id, od.product_id, od.quantity, od.price,
                        o.total_amount, o.order_status, o.created_at AS order_date,
                        p.name AS product_name, p.image_url AS product_image
                 FROM Order_Details od
@@ -35,6 +35,7 @@ public class trackOrderDAO {
                orderDetailEntity orderDetail = new orderDetailEntity();
                orderDetail.setOrderDetailId(rs.getInt("order_detail_id"));
                orderDetail.setOrderId(rs.getInt("order_id"));
+               orderDetail.setUserId(rs.getString("user_id"));
                orderDetail.setProductId(rs.getString("product_id"));
                orderDetail.setQuantity(rs.getInt("quantity"));
                orderDetail.setPrice(rs.getDouble("price"));

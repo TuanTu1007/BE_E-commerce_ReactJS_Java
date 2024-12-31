@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
+import com.google.gson.Gson;
+
 import DAO.viewProductsAdminDAO;
 import Entity.productsEntity;
 
@@ -32,35 +34,40 @@ public class viewProductsAdminController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        Gson gson = new Gson();
+
         try {
             // Get the list of products
             List<productsEntity> productList = productsDAO.getAllProducts();
-            request.setAttribute("productList", productList);
-            request.getRequestDispatcher("/listItemsAdmin.jsp").forward(request, response);
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.getWriter().write(gson.toJson(productList));
         } catch (SQLException e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            e.printStackTrace();
-            request.setAttribute("errorMessage", "Không thể lấy danh sách sản phẩm");
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            response.getWriter().write(gson.toJson("Error fetching product list: " + e.getMessage()));
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        Gson gson = new Gson();
+
         String productId = request.getParameter("productId");
 
         try {
             // Delete the product based on the productId
             productsDAO.deleteProduct(productId);
-
-            // After deletion, redirect back to the product list
-            response.sendRedirect(request.getContextPath() + "/viewProductsAdminController");
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.getWriter().write(gson.toJson("Product deleted successfully"));
         } catch (SQLException e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            e.printStackTrace();
-            request.setAttribute("errorMessage", "Không thể xóa sản phẩm");
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            response.getWriter().write(gson.toJson("Error deleting product: " + e.getMessage()));
         }
     }
 }

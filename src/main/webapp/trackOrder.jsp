@@ -29,6 +29,7 @@
         <tr>
             <th>Order Detail ID</th>
             <th>Order ID</th>
+            <th>user ID</th>
             <th>Product Name</th>
             <th>Product Image</th>
             <th>Quantity</th>
@@ -51,6 +52,7 @@
             <tr>
                 <td>${orderDetail.orderDetailId}</td>
                 <td>${orderDetail.orderId}</td>
+                <td>${orderDetail.userId}</td>
                 <td>${orderDetail.productName}</td>
                 <td><img src="${orderDetail.productImage}" alt="${orderDetail.productName}" /></td>
                 <td>${orderDetail.quantity}</td>

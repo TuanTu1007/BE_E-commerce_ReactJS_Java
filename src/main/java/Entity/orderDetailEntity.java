@@ -7,6 +7,7 @@ public class orderDetailEntity {
     private int orderId;
     private String productId;
 //    private productsEntity product;
+    private String userId;
     private int quantity;
     private double price;
     private int sizeId;
@@ -128,11 +129,12 @@ public class orderDetailEntity {
         super();
     }
 
-	public orderDetailEntity(int orderDetailId, int orderId, String productId, int quantity, double price, int sizeId,
+	public orderDetailEntity(int orderDetailId, int orderId, String userId, String productId, int quantity, double price, int sizeId,
 			double totalAmount, String orderStatus, Timestamp orderDate, String productName, String productImage) {
 		super();
 		this.orderDetailId = orderDetailId;
 		this.orderId = orderId;
+		this.userId = userId;
 		this.productId = productId;
 		this.quantity = quantity;
 		this.price = price;
@@ -142,6 +144,14 @@ public class orderDetailEntity {
 		this.orderDate = orderDate;
 		this.productName = productName;
 		this.productImage = productImage;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
     
 }

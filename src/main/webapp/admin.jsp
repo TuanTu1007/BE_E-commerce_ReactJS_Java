@@ -41,7 +41,7 @@
 <div class="button-container">
     <a href="addProductAdmin.jsp"><button class="btn">Add Items</button></a>
     <a href="<%=request.getContextPath()%>/viewProductsAdminController"><button class="btn">List Items</button></a>
-    <a href="<%=request.getContextPath()%>"><button class="btn">Order Items</button></a>
+    <a href="<%=request.getContextPath()%>/trackOrderController"><button class="btn">Order Items</button></a>
     <a href="dashboard.jsp"><button class="btn">Dashboard</button></a>
 </div>
 

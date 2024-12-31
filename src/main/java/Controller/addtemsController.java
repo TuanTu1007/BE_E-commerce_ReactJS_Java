@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import javax.sql.DataSource;
 
+import com.google.gson.Gson;
+
 import DAO.addItemsDAO;
 import Entity.categoriesEntity;
 import Entity.productsEntity;
@@ -41,71 +43,83 @@ public class addtemsController extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Thông tin cơ bản
-        String name = request.getParameter("name");
-        String description = request.getParameter("description");
-        double price = Double.parseDouble(request.getParameter("price"));
-        int categoryId = Integer.parseInt(request.getParameter("category"));
-        int subcategoryId = Integer.parseInt(request.getParameter("subCategory"));
-        boolean bestseller = request.getParameter("bestseller") != null;
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
 
-        String productId = UUID.randomUUID().toString();
-        long date = System.currentTimeMillis();
+        Gson gson = new Gson();
+        
+        try {
+            // Thông tin cơ bản
+            String name = request.getParameter("name");
+            String description = request.getParameter("description");
+            double price = Double.parseDouble(request.getParameter("price"));
+            int categoryId = Integer.parseInt(request.getParameter("category"));
+            int subcategoryId = Integer.parseInt(request.getParameter("subCategory"));
+            boolean bestseller = request.getParameter("bestseller") != null;
 
-        // Xử lý ảnh
-        String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads";
-        File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdir();
-        }
+            String productId = UUID.randomUUID().toString();
+            long date = System.currentTimeMillis();
 
-        List<String> imageUrls = new ArrayList<>();
-        for (Part part : request.getParts()) {
-            if (part.getName().startsWith("image") && part.getSize() > 0) {
-                String fileName = UUID.randomUUID().toString() + "_" + extractFileName(part);
-                String filePath = uploadPath + File.separator + fileName;
-                part.write(filePath);
-                imageUrls.add("uploads/" + fileName); // Lưu đường dẫn ảnh
+            // Xử lý ảnh
+            String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads";
+            File uploadDir = new File(uploadPath);
+            if (!uploadDir.exists()) {
+                uploadDir.mkdir();
             }
-        }
 
-        // Nếu không có ảnh nào, sử dụng ảnh mặc định
-        String imageUrl = imageUrls.isEmpty() ? "placeholder.jpg" : String.join(";", imageUrls);
-
-        // Tạo entity
-        categoriesEntity category = new categoriesEntity();
-        category.setCategoryId(categoryId);
-
-        subcategoriesEntity subCategory = new subcategoriesEntity();
-        subCategory.setSubcategoryId(subcategoryId);
-
-        productsEntity product = new productsEntity();
-        product.setProductId(productId);
-        product.setName(name);
-        product.setImageUrl(imageUrl);
-        product.setDescription(description);
-        product.setPrice(price);
-        product.setCategory(category);
-        product.setSubCategory(subCategory);
-        product.setBestseller(bestseller);
-        product.setDate(date);
-
-        // Xử lý kích cỡ sản phẩm
-        String[] sizes = request.getParameterValues("sizes");
-        List<Integer> sizeIds = new ArrayList<>();
-        if (sizes != null) {
-            for (String size : sizes) {
-                sizeIds.add(Integer.parseInt(size));
+            List<String> imageUrls = new ArrayList<>();
+            for (Part part : request.getParts()) {
+                if (part.getName().startsWith("image") && part.getSize() > 0) {
+                    String fileName = UUID.randomUUID().toString() + "_" + extractFileName(part);
+                    String filePath = uploadPath + File.separator + fileName;
+                    part.write(filePath);
+                    imageUrls.add("uploads/" + fileName); // Lưu đường dẫn ảnh
+                }
             }
-        }
 
-        // Lưu sản phẩm vào database
-        boolean success = addItemsDao.addItems(product, sizeIds);
+            // Nếu không có ảnh nào, sử dụng ảnh mặc định
+            String imageUrl = imageUrls.isEmpty() ? "placeholder.jpg" : String.join(";", imageUrls);
 
-        if (success) {
-            response.sendRedirect("/success.jsp");
-        } else {
-            response.sendRedirect("/error.jsp");
+            // Tạo entity
+            categoriesEntity category = new categoriesEntity();
+            category.setCategoryId(categoryId);
+
+            subcategoriesEntity subCategory = new subcategoriesEntity();
+            subCategory.setSubcategoryId(subcategoryId);
+
+            productsEntity product = new productsEntity();
+            product.setProductId(productId);
+            product.setName(name);
+            product.setImageUrl(imageUrl);
+            product.setDescription(description);
+            product.setPrice(price);
+            product.setCategory(category);
+            product.setSubCategory(subCategory);
+            product.setBestseller(bestseller);
+            product.setDate(date);
+
+            // Xử lý kích cỡ sản phẩm
+            String[] sizes = request.getParameterValues("sizes");
+            List<Integer> sizeIds = new ArrayList<>();
+            if (sizes != null) {
+                for (String size : sizes) {
+                    sizeIds.add(Integer.parseInt(size));
+                }
+            }
+
+            // Lưu sản phẩm vào database
+            boolean success = addItemsDao.addItems(product, sizeIds);
+
+            if (success) {
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.getWriter().write(gson.toJson("Product added successfully"));
+            } else {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                response.getWriter().write(gson.toJson("Failed to add product"));
+            }
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write(gson.toJson("Error: " + e.getMessage()));
         }
     }
 

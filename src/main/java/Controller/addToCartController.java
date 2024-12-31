@@ -49,7 +49,7 @@ public class addToCartController extends HttpServlet {
             int quantity = Integer.parseInt(quantityParam);
 
             // Lấy userId từ session
-            Integer userId = 1;//(Integer) request.getSession().getAttribute("userId");
+            Integer userId = (Integer) request.getSession().getAttribute("userId");
             if (userId == null) {
                 throw new IllegalArgumentException("User is not logged in.");
             }

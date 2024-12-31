@@ -35,13 +35,14 @@ public class loginController extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Cấu hình CORS
-        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
         response.setHeader("Access-Control-Allow-Credentials", "true");
 
         String email = request.getParameter("email");
         String password = request.getParameter("password");
+        System.out.println(email);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
