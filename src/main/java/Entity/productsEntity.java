@@ -36,10 +36,14 @@ public class productsEntity {
         this.description = description;
         this.price = price;
         this.category = category;
-        this.subCategory = subCategory;  // Gán đối tượng Subcategory
-        this.sizes = sizes;              // Gán mảng sizes
+        this.subCategory = subCategory;  
+        this.sizes = sizes;              
         this.date = date;
         this.bestseller = bestseller;
+    }
+    
+    public productsEntity() {
+    	
     }
 
 	public String getProductId() {

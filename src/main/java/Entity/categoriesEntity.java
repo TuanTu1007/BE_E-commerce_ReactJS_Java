@@ -8,6 +8,10 @@ public class categoriesEntity {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
     }
+    
+    public categoriesEntity() {
+    	
+    }
 
     public int getCategoryId() {
         return categoryId;

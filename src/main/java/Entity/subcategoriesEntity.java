@@ -10,6 +10,10 @@ public class subcategoriesEntity {
         this.subcategoryName = subcategoryName;
         this.categoryId = categoryId;
     }
+    
+    public subcategoriesEntity() {
+    	
+    }
 
     public int getSubcategoryId() {
         return subcategoryId;

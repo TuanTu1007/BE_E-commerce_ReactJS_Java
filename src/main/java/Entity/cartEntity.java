@@ -63,6 +63,8 @@ public class cartEntity {
 		this.sizeId = sizeId;
 		this.addedAt = addedAt;
 	}
-
+	public cartEntity() {
+		
+	}
     
 }
