@@ -105,6 +105,33 @@ CREATE TABLE Reviews (
     FOREIGN KEY (product_id) REFERENCES Products(product_id) ON DELETE CASCADE
 );
 
+CREATE TABLE Ratings (
+    rating_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    product_id VARCHAR(255) NOT NULL,
+    rating INT CHECK (rating >= 1 AND rating <= 5),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (user_id, product_id) -- Đảm bảo mỗi người dùng chỉ đánh giá mỗi sản phẩm một lần
+);
+
+CREATE TABLE Comments (
+    comment_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    product_id VARCHAR(255) NOT NULL,
+    comment TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE PaymentMethods (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    card_number VARCHAR(20) NOT NULL,
+    card_holder_name VARCHAR(100) NOT NULL,
+    expiration_date VARCHAR(7) NOT NULL,
+    cvv VARCHAR(4) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
+
 
 
 
