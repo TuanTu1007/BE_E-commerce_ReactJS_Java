@@ -57,4 +57,34 @@ public class categoriesDAO {
         }
         return subcategories;
     }
+    // Thêm danh mục mới
+    public boolean addCategory(categoriesEntity category) throws SQLException {
+        String sql = "INSERT INTO Categories (category_name) VALUES (?)";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, category.getCategoryName());
+            return stmt.executeUpdate() > 0;
+        }
+    }
+
+    // Cập nhật danh mục
+    public boolean updateCategory(categoriesEntity category) throws SQLException {
+        String sql = "UPDATE Categories SET category_name = ? WHERE category_id = ?";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, category.getCategoryName());
+            stmt.setInt(2, category.getCategoryId());
+            return stmt.executeUpdate() > 0;
+        }
+    }
+
+    // Xóa danh mục
+    public boolean deleteCategory(int categoryId) throws SQLException {
+        String sql = "DELETE FROM Categories WHERE category_id = ?";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, categoryId);
+            return stmt.executeUpdate() > 0;
+        }
+    }
 }
