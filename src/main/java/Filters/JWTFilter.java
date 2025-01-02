@@ -35,10 +35,11 @@ public class JWTFilter implements Filter {
 
         // Skip JWT verification for login or public endpoints
         String path = httpRequest.getRequestURI();
-        if (path.contains("/loginController")) {
+        if (path.contains("/loginController") || path.equals("/BE_E-commerce_ReactJS_Java/")) {
             chain.doFilter(request, response);
             return;
         }
+
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
